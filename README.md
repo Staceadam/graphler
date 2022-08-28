@@ -1,5 +1,4 @@
-#
-Graphler
+# Graphler
 
 - cli
 - build in rust
