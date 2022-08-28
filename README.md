@@ -11,7 +11,7 @@ create a solution for managing a graphql postman collection that involves
 3. creating a collection.json with correct formatting for a postman collection
 4. looks to see if there is an existing collection.json and uses any existing variables with query matches
 
-checkout https://deno.land/x/graphman@v1.0.0?source for inspiration
+For inspiration checkout: [graphman](https://deno.land/x/graphman@v1.0.0)
 
 ```json
 {
