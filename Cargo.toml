@@ -1,9 +1,10 @@
 [package]
+edition = "2021"
 name = "graphler"
 version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+graphql-parser = "*"
+serde = "*"
+serde_json = "*"
+serde_yaml = "*"
 walkdir = "2"
