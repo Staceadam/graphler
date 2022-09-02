@@ -20,9 +20,8 @@ fn main() {
                     let data = fs::read_to_string(path).expect("Unable to read file");
                     // parse graphql query to ast
                     let ast = parse_query::<&str>(data.as_str()).unwrap();
-                    // format
-                    // transform ast to json
 
+                    // transform ast to json
                     let json_template: Value = json!({
                         "name": "character",
                         "request": {
