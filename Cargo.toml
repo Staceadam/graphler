@@ -3,6 +3,7 @@ edition = "2021"
 name = "graphler"
 version = "0.1.0"
 [dependencies]
+bytestring = "*"
 graphql-parser = "*"
 serde = "*"
 serde_json = "*"

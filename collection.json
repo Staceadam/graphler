@@ -1,0 +1,26 @@
+{
+  "name": "character",
+  "request": {
+    "body": {
+      "graphql": {
+        "query": "query character($id: ID!) {\n  character(id: $id) {\n    id\n    name\n    status\n    species\n    type\n    gender\n    origin\n    location\n    image\n    episode\n    created\n  }\n}\n",
+        "variables": "{\n\t\"id\": \"0\"\n}"
+      },
+      "mode": "graphql"
+    },
+    "header": [],
+    "method": "POST",
+    "url": {
+      "host": [
+        "rickandmortyapi",
+        "com"
+      ],
+      "path": [
+        "graphql"
+      ],
+      "protocol": "https",
+      "raw": "https://rickandmortyapi.com/graphql"
+    }
+  },
+  "response": []
+}

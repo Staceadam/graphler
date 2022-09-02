@@ -1,9 +1,12 @@
 use walkdir::WalkDir;
-//use serde::{Serialize, Deserialize};
-use serde_json::json;
+use serde_json::{json,Value, to_writer_pretty};
 use std::path::Path;
 use std::fs;
+use std::fs::File;
+use std::io::prelude::*;
 use graphql_parser::query::parse_query;
+
+
 
 fn main() {
     const PATH: &str = "src/etc";
@@ -17,16 +20,42 @@ fn main() {
                     let data = fs::read_to_string(path).expect("Unable to read file");
                     // parse graphql query to ast
                     let ast = parse_query::<&str>(data.as_str()).unwrap();
-                    // TODO: add visitor pattern here
-                    // you can change the following {:?} to {:#?} for different fmting
-                    // we are gonna have to parse the files to ASTs because they're
-                    // not .js or .json
-                    //
-                    // is we find/write a visitor pattern to handle this
-                    // some options for other graphql crates
-                    // https://github.com/graphql-rust/graphql-client
-                    let json = json!(format!("{:?}", ast));
-                    println!("{}", json);
+                    // format
+                    // transform ast to json
+
+                    let json_template: Value = json!({
+                        "name": "character",
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "graphql",
+                                "graphql": {
+                                    "query": format!("{}", ast),
+                                    "variables": "{\n\t\"id\": \"0\"\n}"
+                                }
+                            },
+                            "url": {
+                                "raw": "https://rickandmortyapi.com/graphql",
+                                "protocol": "https",
+                                "host": [
+                                    "rickandmortyapi",
+                                    "com"
+                                ],
+                                "path": [
+                                    "graphql"
+                                ]
+                            }
+                        },
+                        "response": []
+                    });
+
+
+
+
+                    // write to file
+                    let file = File::create("collection.json").unwrap();
+                    to_writer_pretty(file, &json_template).unwrap();
                 }
             }
             None => ()
