@@ -1,6 +1,4 @@
-use graphler::{
-    parser::{parse}
-};
+use graphler::parser::parse;
 
 #[test]
 fn valid_collection_json() {
