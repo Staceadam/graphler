@@ -5,7 +5,7 @@ version = "0.1.0"
 [dependencies]
 bytestring = "*"
 graphql-parser = "*"
-serde = "*"
+serde = { version = "*", features = ["derive"] }
 serde_json = "*"
 serde_yaml = "*"
 walkdir = "2"
