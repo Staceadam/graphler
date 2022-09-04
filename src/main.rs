@@ -1,5 +1,6 @@
 use graphler::parser::parse;
 
 fn main() {
-    parse("src/etc").expect("parsing failed");
+    let parsed = parse("src/etc").expect("parsing failed");
+    println!("{:#?}", parsed)
 }
