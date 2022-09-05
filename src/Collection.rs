@@ -1,38 +1,5 @@
-
-	//"info": {
-		//"name": "rickandmortyapi.com-GraphMan",
-		//"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	//},
-	//"item": [
-		//{
-			//"name": "character",
-			//"request": {
-				//"method": "POST",
-				//"header": [],
-				//"body": {
-					//"mode": "graphql",
-					//"graphql": {
-						//"query": "query character($id: ID!) {\n  character(id: $id) {\n    __typename\n    id # The id of the character.\n    name # The name of the character.\n    status # The status of the character ('Alive', 'Dead' or 'unknown').\n    species # The species of the character.\n    type # The type or subspecies of the character.\n    gender # The gender of the character ('Female', 'Male', 'Genderless' or 'unknown').\n    # origin # The character's origin location\n    # location # The character's last known location\n    image # Link to the character's image. All images are 300x300px and most are medium shots or portraits since they are intended to be used as avatars.\n    # episode # Episodes in which this character appeared.\n    created # Time at which the character was created in the database.\n  }\n}",
-						//"variables": "{\n\t\"id\": \"0\"\n}"
-					//}
-				//},
-				//"url": {
-					//"raw": "https://rickandmortyapi.com/graphql",
-					//"protocol": "https",
-					//"host": [
-						//"rickandmortyapi",
-						//"com"
-					//],
-					//"path": [
-						//"graphql"
-					//]
-				//}
-			//},
-			//"response": []
-		//},
-
-
 use serde::{Deserialize, Serialize};
+use graphql_parser::{query};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Url {
@@ -58,11 +25,72 @@ struct Request {
     body: Body,
     url: Url,
 }
+
+
+//pub fn build_collection_query<'b>(ast: &'b query::Document<&'b str>) -> Query {
+    //Query::new()
+
+    //let query: Query = from_value(json!({
+        //"name": "character",
+        //"request": {
+            //"method": "POST",
+            //"header": [],
+            //"body": {
+                //"mode": "graphql",
+                //"graphql": {
+                    //"query": format!("{}", &ast),
+                    //"variables": "{\n\t\"id\": \"0\"\n}"
+                //}
+            //},
+            //"url": {
+                //"raw": "https://rickandmortyapi.com/graphql",
+                //"protocol": "https",
+                //"host": [
+                    //"rickandmortyapi",
+                    //"com"
+                //],
+                //"path": [
+                    //"graphql"
+                //]
+            //}
+        //},
+        //"response": []
+    //}))
+    //.expect("Couldn't read the ast that was passed");
+    //query
+//}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Query {
     name: String,
     request: Request,
     response: Vec<String>,
+}
+
+impl Query {
+    pub fn new<'a>(ast: &'a query::Document<&'a str>) -> Query {
+        Query {
+            name: "character".to_owned(),
+            request: Request {
+                method: "POST".to_owned(),
+                header: Vec::new(),
+                body: Body {
+                    mode: "graphql".to_owned(),
+                    graphql: Graphql {
+                        query: format!("{}", ast),
+                        variables: "{\n\t\"id\": \"0\"\n}".to_owned()
+                    }
+                },
+                url: Url {
+                    raw: "https://rickandmortyapi.com/graphql".to_owned(),
+                    protocol: "https".to_owned(),
+                    host: vec!["rickandmortyapi".to_owned(), "com".to_owned()],
+                    path: vec!["graphql".to_owned()]
+                }
+            },
+            response: Vec::new()
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

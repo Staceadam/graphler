@@ -62,6 +62,7 @@ dependencies = [
  "graphql-parser",
  "serde",
  "serde_json",
+ "serde_test",
  "serde_yaml",
  "walkdir",
 ]
@@ -165,6 +166,15 @@ checksum = "e55a28e3aaef9d5ce0506d0a14dbba8054ddc7e499ef522dd8b26859ec9d4a44"
 dependencies = [
  "itoa",
  "ryu",
+ "serde",
+]
+
+[[package]]
+name = "serde_test"
+version = "1.0.144"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c7f3621491f256177206a7c2152c17f322c0d0b30af05359088172437d29e25"
+dependencies = [
  "serde",
 ]
 

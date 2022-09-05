@@ -4,12 +4,6 @@ use std::fs::File;
 use std::path::Path;
 use graphler::Query;
 
-//pub fn write_to_file(query: Query, file_name: String) {
-    //let file = File::create(file_name).expect("couldn't create file");
-    //to_writer_pretty(file, &query).expect("failed to write to file");
-//}
-
-
 pub fn write_to_file(query: Query, file_name: &str) {
     let file_check = Path::new(file_name).exists();
     if file_check {
