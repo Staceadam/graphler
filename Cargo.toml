@@ -8,4 +8,6 @@ graphql-parser = "*"
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
 serde_yaml = "*"
+serde_test = "1.0.144"
 walkdir = "2"
+
