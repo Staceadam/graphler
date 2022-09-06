@@ -13,38 +13,22 @@ create a solution for managing a graphql postman collection that involves
 
 For inspiration checkout: [graphman](https://deno.land/x/graphman@v1.0.0)
 
-```json
-{
-	"info": {
-		"name": "rickandmortyapi.com-GraphMan",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "character",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "graphql",
-					"graphql": {
-						"query": "query character($id: ID!) {\n  character(id: $id) {\n    __typename\n    id # The id of the character.\n    name # The name of the character.\n    status # The status of the character ('Alive', 'Dead' or 'unknown').\n    species # The species of the character.\n    type # The type or subspecies of the character.\n    gender # The gender of the character ('Female', 'Male', 'Genderless' or 'unknown').\n    # origin # The character's origin location\n    # location # The character's last known location\n    image # Link to the character's image. All images are 300x300px and most are medium shots or portraits since they are intended to be used as avatars.\n    # episode # Episodes in which this character appeared.\n    created # Time at which the character was created in the database.\n  }\n}",
-						"variables": "{\n\t\"id\": \"0\"\n}"
-					}
-				},
-				"url": {
-					"raw": "https://rickandmortyapi.com/graphql",
-					"protocol": "https",
-					"host": [
-						"rickandmortyapi",
-						"com"
-					],
-					"path": [
-						"graphql"
-					]
-				}
-			},
-			"response": []
-		},
+## V1
+[] smart variables that grab off of query
+[] visitor solution
+[] directory at $HOME
+	- base config
+	- stores output
+	- supports one project
+[] cli
+	- request for headers
 
-```
+## V2
+[] checks existing collection.json against input of .graphql files
+[] base directory supports multiple "projects"
+[] cli
+	- supports setting a current project
+	- supports multiple projects
+	- has add a new project
+[] js support
+[] insomnia plugin
