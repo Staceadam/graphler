@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de::Visitor};
 use graphql_parser::{query};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -94,9 +94,9 @@ impl Query {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Info {
-    name: String,
-    schema: String
+pub struct Info {
+    pub name: String,
+    pub schema: String
 }
 
 #[derive(Serialize, Deserialize, Debug)]

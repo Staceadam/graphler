@@ -1,7 +1,6 @@
-use serde_json::json;
 use graphler::parser::parse;
-use graphler::collection::{Collection, Query};
-use serde_test::{Token, assert_tokens};
+use serde_json::{json};
+use graphler::collection;
 
 	//"info": {
 		//"name": "rickandmortyapi.com-GraphMan",
@@ -34,55 +33,23 @@ use serde_test::{Token, assert_tokens};
 			//},
 			//"response": []
 		//},
-        //
 
-
-       //let json_value: Value = from_str(s).unwrap();
-        //assert_eq!(json_value, to_value(&value).unwrap());
-
-        //// Make sure we can deserialize from a `&Value`.
-        //let v = T::deserialize(&json_value).unwrap();
-        //assert_eq!(v, value);
-
-        //// Make sure we can deserialize from a `Value`.
-        //let v: T = from_value(json_value.clone()).unwrap();
-        //assert_eq!(v, value);
-
-        //// Make sure we can round trip back to `Value`.
-        //let json_value2: Value = from_value(json_value.clone()).unwrap();
-        //assert_eq!(json_value2, json_value);
-        //
-
-/// #[derive(Serialize, Deserialize, PartialEq, Debug)]
-/// struct S {
-///     a: u8,
-///     b: u8,
-/// }
-///
-/// let s = S { a: 0, b: 0 };
-/// assert_tokens(&s, &[
-///     Token::Struct { name: "S", len: 2 },
-///     Token::Str("a"),
-///     Token::U8(0),
-///     Token::Str("b"),
-///     Token::U8(0),
-///     Token::StructEnd,
-/// ]);
-
-//fn build_mock_collection() -> Collection {
-    //Collection::new("testColleection")
-//}
-    //let mock_collection = build_mock_collection();
-    //println!("{:#?}", mock_collection);
+#[test]
+fn test_colletion() {
+    //todo: find way to make blanket assertion against collection
+    parse("src/etc/single").expect("parsing failed");
+    //assert_eq!(col, true);
+}
 
 #[test]
 fn test_info() {
-    let parsed = parse("src/etc").expect("parsing failed");
-
-    assert_tokens(&parsed, &[
-        Token::Map { len: Some(0) },
-        Token::MapEnd,
-    ]);
+    let col = json!(parse("src/etc/single").expect("parsing failed"));
+    //todo: make this more generic
+    let info = collection::Info {
+        name: String::from("insertNameFromCliInputOrUrlBase"),
+        schema: String::from("https://schema.getpostman.com/json/collection/v2.1.0/collection.json"),
+    };
+    assert_eq!(*col.get("info").unwrap(), json!(info));
 }
 
 #[test]
