@@ -1,5 +1,5 @@
 use graphler::parser::parse;
-use graphler::writer::write_to_file;
+use graphler_core::writer::write_to_file;
 
 fn main() {
     let parsed = parse("src/etc/multiple/").expect("parsing failed");
