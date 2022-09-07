@@ -53,6 +53,13 @@ fn test_info() {
 }
 
 #[test]
+fn test_variables() {
+    let col = json!(parse("src/etc/single").expect("parsing failed"));
+    println!("{}", *col.get("variables").unwrap())
+    //assert_eq!(*col.get("info").unwrap(), json!(info));
+}
+
+#[test]
 fn test_multiple_items() {
     // todo: break up parser into parseing and file creation
     // test parser output against a mocked valid postman.collection.json

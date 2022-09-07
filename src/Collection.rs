@@ -1,5 +1,7 @@
-use serde::{Deserialize, Serialize, de::Visitor};
+use serde::{Serialize, Deserialize};
 use graphql_parser::{query};
+
+use serde::de::{Deserialize as De, Deserializer, Error, Unexpected};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Url {
@@ -8,7 +10,7 @@ struct Url {
     host: Vec<String>,
     path: Vec<String>,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Debug)]
 struct Graphql {
     query: String,
     variables: String,
@@ -25,6 +27,19 @@ struct Request {
     body: Body,
     url: Url,
 }
+
+impl<'de> De<'de> for Graphql {
+    fn deserialize<D>(deserializer: D) -> Result<Graphql, D::Error>
+        where D: Deserializer<'de>
+    {
+        let s: &str = Deserialize::deserialize(deserializer)?;
+        println!("{}", s);
+        //s.parse()
+            //.map(Value)
+            //.map_err(|_| D::Error::invalid_value(Unexpected::Str(s), &"a floating point number as a string"))
+    }
+}
+
 
 
 //pub fn build_collection_query<'b>(ast: &'b query::Document<&'b str>) -> Query {
@@ -69,11 +84,12 @@ pub struct Query {
 
 impl Query {
     pub fn new<'a>(ast: &'a query::Document<&'a str>) -> Query {
+        println!("{:#?}", ast);
         Query {
             name: "character".to_owned(),
             request: Request {
                 method: "POST".to_owned(),
-                header: Vec::new(),
+                header: vec![],
                 body: Body {
                     mode: "graphql".to_owned(),
                     graphql: Graphql {
@@ -88,7 +104,7 @@ impl Query {
                     path: vec!["graphql".to_owned()]
                 }
             },
-            response: Vec::new()
+            response: vec![]
         }
     }
 }

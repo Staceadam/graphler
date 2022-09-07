@@ -23,7 +23,8 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                     collection.item.push(query)
                 }
             }
-            None => println!("Couldn't find any .graphql or .gql files in this project"),
+            //None => println!("Couldn't find any .graphql or .gql files in this project"),
+            None => {}
         }
     }
     Ok(collection)
