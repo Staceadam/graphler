@@ -4,7 +4,7 @@ use std::io::Error;
 use std::path::Path;
 use walkdir::WalkDir;
 //this is dumb
-use graphler_core;
+use crate::collection::{Collection, Query};
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");

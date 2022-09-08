@@ -2,15 +2,11 @@
 edition = "2021"
 name = "graphler"
 version = "0.1.0"
-[lib]
-name = "graphler_core"
-path = "src/lib.rs"
 [dependencies]
 bytestring = "*"
 graphql-parser = "*"
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
-serde_yaml = "*"
 serde_test = "1.0.144"
 walkdir = "2"
 
