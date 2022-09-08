@@ -1,4 +1,4 @@
-use graphler::parser::parse;
+use graphler_core::parser::parse;
 use graphler_core::writer::write_to_file;
 
 fn main() {

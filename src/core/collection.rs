@@ -1,7 +1,7 @@
 use graphql_parser::query;
+//use serde::de::{Deserialize as De, Deserializer, Error, Unexpected};
 use serde::{Deserialize, Serialize};
-
-use serde::de::{Deserialize as De, Deserializer, Error, Unexpected};
+use serde_json::{from_str, Value};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Url {
@@ -10,7 +10,7 @@ struct Url {
     host: Vec<String>,
     path: Vec<String>,
 }
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 struct Graphql {
     query: String,
     variables: String,
@@ -28,18 +28,18 @@ struct Request {
     url: Url,
 }
 
-impl<'de> De<'de> for Graphql {
-    fn deserialize<D>(deserializer: D) -> Result<Graphql, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let s: &str = Deserialize::deserialize(deserializer)?;
-        println!("{}", s);
-        //s.parse()
-        //.map(Value)
-        //.map_err(|_| D::Error::invalid_value(Unexpected::Str(s), &"a floating point number as a string"))
-    }
-}
+//impl<'de> De<'de> for Graphql {
+//fn deserialize<D>(deserializer: D) -> Result<Graphql, D::Error>
+//where
+//D: Deserializer<'de>,
+//{
+//let s: &str = Deserialize::deserialize(deserializer)?;
+//println!("{}", s);
+////s.parse()
+////.map(Value)
+////.map_err(|_| D::Error::invalid_value(Unexpected::Str(s), &"a floating point number as a string"))
+//}
+//}
 
 //pub fn build_collection_query<'b>(ast: &'b query::Document<&'b str>) -> Query {
 //Query::new()
@@ -82,8 +82,10 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new<'a>(ast: &'a query::Document<&'a str>) -> Query {
+    pub fn new<'ast>(ast: &'ast query::Document<&'ast str>) -> Query {
         println!("{:#?}", ast);
+        let v: Value = from_str(format!("{:?}", ast).as_str()).unwrap();
+        println!("{}", v["name"]);
         Query {
             name: "character".to_owned(),
             request: Request {

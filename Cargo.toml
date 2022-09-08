@@ -3,7 +3,7 @@ edition = "2021"
 name = "graphler"
 version = "0.1.0"
 [lib]
-name = "graphql_core"
+name = "graphler_core"
 path = "src/lib.rs"
 [dependencies]
 bytestring = "*"

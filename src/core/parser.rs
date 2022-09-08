@@ -1,10 +1,10 @@
-use graphql_parser::{parse_query};
+use graphql_parser::parse_query;
 use std::fs;
 use std::io::Error;
 use std::path::Path;
 use walkdir::WalkDir;
 //this is dumb
-use crate::collection::{Collection, Query};
+use graphler_core;
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
