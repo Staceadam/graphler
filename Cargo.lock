@@ -54,6 +54,7 @@ version = "0.1.0"
 dependencies = [
  "bytestring",
  "graphql-parser",
+ "graphql-tools",
  "serde",
  "serde_json",
  "serde_test",
@@ -68,6 +69,17 @@ checksum = "d2ebc8013b4426d5b81a4364c419a95ed0b404af2b82e2457de52d9348f0e474"
 dependencies = [
  "combine",
  "thiserror",
+]
+
+[[package]]
+name = "graphql-tools"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "13c437afbde2b7eabd07ba68dbcdaa33e0bb122032a235623036f6f8c2f78d3b"
+dependencies = [
+ "graphql-parser",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

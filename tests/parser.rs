@@ -35,7 +35,7 @@ use graphler::collection;
 		//},
 
 #[test]
-fn test_colletion() {
+fn test_collection() {
     //todo: find way to make blanket assertion against collection
     parse("src/etc/single").expect("parsing failed");
     //assert_eq!(col, true);
@@ -49,6 +49,7 @@ fn test_info() {
         name: String::from("insertNameFromCliInputOrUrlBase"),
         schema: String::from("https://schema.getpostman.com/json/collection/v2.1.0/collection.json"),
     };
+    println!("{}", *col.get("info").unwrap());
     assert_eq!(*col.get("info").unwrap(), json!(info));
 }
 

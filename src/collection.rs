@@ -1,5 +1,10 @@
 use graphql_parser::query;
 //use serde::de::{Deserialize as De, Deserializer, Error, Unexpected};
+use graphql_tools::ast::schema_visitor::SchemaVisitor;
+use graphql_tools::static_graphql::schema:: {
+    Definition, Document, EnumType, EnumValue, Field, InputObjectType,
+    InputValue, InterfaceType, ObjectType, ScalarType, SchemaDefinition, TypeDefinition, UnionType,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, Value};
 
@@ -28,52 +33,6 @@ struct Request {
     url: Url,
 }
 
-//impl<'de> De<'de> for Graphql {
-//fn deserialize<D>(deserializer: D) -> Result<Graphql, D::Error>
-//where
-//D: Deserializer<'de>,
-//{
-//let s: &str = Deserialize::deserialize(deserializer)?;
-//println!("{}", s);
-////s.parse()
-////.map(Value)
-////.map_err(|_| D::Error::invalid_value(Unexpected::Str(s), &"a floating point number as a string"))
-//}
-//}
-
-//pub fn build_collection_query<'b>(ast: &'b query::Document<&'b str>) -> Query {
-//Query::new()
-
-//let query: Query = from_value(json!({
-//"name": "character",
-//"request": {
-//"method": "POST",
-//"header": [],
-//"body": {
-//"mode": "graphql",
-//"graphql": {
-//"query": format!("{}", &ast),
-//"variables": "{\n\t\"id\": \"0\"\n}"
-//}
-//},
-//"url": {
-//"raw": "https://rickandmortyapi.com/graphql",
-//"protocol": "https",
-//"host": [
-//"rickandmortyapi",
-//"com"
-//],
-//"path": [
-//"graphql"
-//]
-//}
-//},
-//"response": []
-//}))
-//.expect("Couldn't read the ast that was passed");
-//query
-//}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Query {
     name: String,
@@ -81,11 +40,72 @@ pub struct Query {
     response: Vec<String>,
 }
 
+struct QueryVisitor;
+
+impl QueryVisitor {
+    fn create_query(&self, document: &Document) -> Graphql {
+        let mut graphql = Graphql {
+            query: String::new(),
+            variables: String::new()
+        };
+        self.visit_schema_document(document, &mut graphql);
+
+        graphql
+    }
+}
+
+impl SchemaVisitor<Graphql> for QueryVisitor {
+    fn enter_object_type(
+        &self,
+        _node: &ObjectType,
+        _visitor_context: &mut Graphql,
+    ) {
+        // _visitor_context
+        //     .query
+        println!("{}", _node.name);
+    }
+
+    fn enter_object_type_field(
+        &self,
+        _node: &Field,
+        _type_: &ObjectType,
+        _visitor_context: &mut Graphql,
+    ) {
+        // let field_id = format!("{}.{}", _type_.name.as_str(), _node.name.as_str());
+        // _visitor_context.query
+        println!("{}", _type_.name);
+        println!("{}", _node.name);
+    }
+
+    fn enter_input_object_type(
+        &self,
+        _node: &InputObjectType,
+        _visitor_context: &mut Graphql,
+    ) {
+        println!("{}", _node.name);
+        // _visitor_context
+        //     .query
+    }
+
+    fn enter_input_object_type_field(
+        &self,
+        _node: &InputValue,
+        _input_type: &InputObjectType,
+        _visitor_context: &mut Graphql,
+    ) {
+        // let field_id = format!("{}.{}", _input_type.name.as_str(), _node.name.as_str());
+        // _visitor_context.query;
+        println!("{}", _input_type.name);
+        println!("{}", _node.name);
+    }
+}
+
 impl Query {
     pub fn new<'ast>(ast: &'ast query::Document<&'ast str>) -> Query {
-        println!("{:#?}", ast);
-        let v: Value = from_str(format!("{:?}", ast).as_str()).unwrap();
-        println!("{}", v["name"]);
+    
+        let visitor = QueryVisitor {};
+        let graphql = visitor.create_query(&ast);
+
         Query {
             name: "character".to_owned(),
             request: Request {
