@@ -2,7 +2,7 @@
 use std::slice;
 
 use graphql_parser::query::Text;
-use graphql_parser::query::{SelectionSet, Directive, Selection, Field};
+use graphql_parser::query::{SelectionSet, Selection, Field};
 use graphql_parser::query::{Document, Definition};
 
 

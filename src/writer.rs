@@ -1,8 +1,8 @@
-use serde_json::{to_writer_pretty};
+use serde_json::to_writer_pretty;
 use std::fs;
 use std::fs::File;
 use std::path::Path;
-use graphler::Query;
+use crate::collection::Query;
 
 pub fn write_to_file(query: Query, file_name: &str) {
     let file_check = Path::new(file_name).exists();

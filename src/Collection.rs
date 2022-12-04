@@ -26,40 +26,6 @@ struct Request {
     url: Url,
 }
 
-
-//pub fn build_collection_query<'b>(ast: &'b query::Document<&'b str>) -> Query {
-    //Query::new()
-
-    //let query: Query = from_value(json!({
-        //"name": "character",
-        //"request": {
-            //"method": "POST",
-            //"header": [],
-            //"body": {
-                //"mode": "graphql",
-                //"graphql": {
-                    //"query": format!("{}", &ast),
-                    //"variables": "{\n\t\"id\": \"0\"\n}"
-                //}
-            //},
-            //"url": {
-                //"raw": "https://rickandmortyapi.com/graphql",
-                //"protocol": "https",
-                //"host": [
-                    //"rickandmortyapi",
-                    //"com"
-                //],
-                //"path": [
-                    //"graphql"
-                //]
-            //}
-        //},
-        //"response": []
-    //}))
-    //.expect("Couldn't read the ast that was passed");
-    //query
-//}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Query {
     name: String,
@@ -68,9 +34,9 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new<'a>(ast: &'a query::Document<&'a str>) -> Query {
+    pub fn new<'a, 'b>(f: &'a query::Field<&'a str>, ast: &'b query::Document<&'b str>) -> Query {
         Query {
-            name: "character".to_owned(),
+            name: f.name.to_string(),
             request: Request {
                 method: "POST".to_owned(),
                 header: Vec::new(),
@@ -90,6 +56,7 @@ impl Query {
             },
             response: Vec::new()
         }
+
     }
 }
 

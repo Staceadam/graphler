@@ -4,14 +4,13 @@ use std::fs;
 use std::io::Error;
 use std::path::Path;
 use walkdir::WalkDir;
-//this is dumb
 use crate::collection::{Collection, Query};
 use crate::visitor::Visit;
 
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
-    //todo: could do the extension match in the filter_map here
+    //TODO: could do the extension match in the filter_map here
     for file in WalkDir::new(path).into_iter().filter_map(|file| file.ok()) {
         let extension = Path::new(file.file_name()).extension();
         match extension {
@@ -22,15 +21,14 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                 if ext == "graphql" || ext == "gql" {
                     let data = fs::read_to_string(file.path()).expect("Unable to read file");
                     let ast = parse_query(data.as_str()).expect("failed to parse the file");
-                    let mut fields = 0;
-                    let mut field_names = Vec::new();
                     for f in ast.visit::<Field<_>>() {
-                        fields += 1;
-                        field_names.push(f.name)
+                        let query = Query::new(f, &ast);
+                        // if f.arguments.len() > 0 {
+                        // println!("============================");
+                        //     println!("{:#?}", f);
+                        // }
+                        collection.item.push(query)
                     }
-                    println!("{:?}",field_names);
-                    let query = Query::new(&ast);
-                    collection.item.push(query)
                 }
             }
             None => println!("Couldn't find any .graphql or .gql files in this project"),
