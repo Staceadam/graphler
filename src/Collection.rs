@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use graphql_parser::{query};
+use graphql_parser::query;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Url {

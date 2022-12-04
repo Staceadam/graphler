@@ -1,10 +1,13 @@
-use graphql_parser::{parse_query};
+use graphql_parser::parse_query;
+use graphql_parser::query::Field;
 use std::fs;
 use std::io::Error;
 use std::path::Path;
 use walkdir::WalkDir;
 //this is dumb
 use crate::collection::{Collection, Query};
+use crate::visitor::Visit;
+
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
@@ -19,6 +22,13 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                 if ext == "graphql" || ext == "gql" {
                     let data = fs::read_to_string(file.path()).expect("Unable to read file");
                     let ast = parse_query(data.as_str()).expect("failed to parse the file");
+                    let mut fields = 0;
+                    let mut field_names = Vec::new();
+                    for f in ast.visit::<Field<_>>() {
+                        fields += 1;
+                        field_names.push(f.name)
+                    }
+                    println!("{:?}",field_names);
                     let query = Query::new(&ast);
                     collection.item.push(query)
                 }
