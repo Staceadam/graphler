@@ -9,7 +9,10 @@ use crate::visitor::Visit;
 
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
-    let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
+    let mut collection = Collection::new(
+        "insertNameFromCliInputOrUrlBase", 
+        "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    );
     //TODO: could do the extension match in the filter_map here
     for file in WalkDir::new(path).into_iter().filter_map(|file| file.ok()) {
         let extension = Path::new(file.file_name()).extension();
@@ -22,16 +25,14 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                     let data = fs::read_to_string(file.path()).expect("Unable to read file");
                     let ast = parse_query(data.as_str()).expect("failed to parse the file");
                     for f in ast.visit::<Field<_>>() {
-                        let query = Query::new(f, &ast);
-                        // if f.arguments.len() > 0 {
-                        // println!("============================");
-                        //     println!("{:#?}", f);
-                        // }
-                        collection.item.push(query)
+                        if f.selection_set.items.len() > 0 && f.position.line == 2 {
+                            let query = Query::new(f, &ast);
+                            collection.item.push(query)
+                        }
                     }
                 }
             }
-            None => println!("Couldn't find any .graphql or .gql files in this project"),
+            None => (),
         }
     }
     Ok(collection)

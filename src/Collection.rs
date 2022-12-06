@@ -35,6 +35,7 @@ pub struct Query {
 
 impl Query {
     pub fn new<'a, 'b>(f: &'a query::Field<&'a str>, ast: &'b query::Document<&'b str>) -> Query {
+        println!("{:#?}", f.arguments);
         Query {
             name: f.name.to_string(),
             request: Request {
@@ -73,11 +74,11 @@ pub struct Collection {
 }
 
 impl Collection {
-    pub fn new(name: &str) -> Collection {
+    pub fn new(name: &str, schema: &str) -> Collection {
         Collection {
             info: Info {
                 name: name.to_owned(),
-                schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json".to_owned()
+                schema: schema.to_owned()
             },
             item: Vec::new()
         }

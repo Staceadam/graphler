@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "insertNameFromCliInputOrUrlBase",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "character",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query character($id: ID!) {\n  character(id: $id) {\n    id\n    name\n    status\n    species\n    type\n    gender\n    origin\n    location\n    image\n    episode\n    created\n  }\n}\n",
+            "variables": "{\n\t\"id\": \"0\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://rickandmortyapi.com/graphql",
+          "protocol": "https",
+          "host": [
+            "rickandmortyapi",
+            "com"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "locations",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query locations($page: Int, $filter: FilterLocation) {\n  locations(page: $page, filter: $filter) {\n    __typename\n  }\n}\n",
+            "variables": "{\n\t\"id\": \"0\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://rickandmortyapi.com/graphql",
+          "protocol": "https",
+          "host": [
+            "rickandmortyapi",
+            "com"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "episode",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query episode($id: ID!) {\n  episode(id: $id) {\n    __typename\n    id\n    name\n    air_date\n    created\n  }\n}\n",
+            "variables": "{\n\t\"id\": \"0\"\n}"
+          }
+        },
+        "url": {
+          "raw": "https://rickandmortyapi.com/graphql",
+          "protocol": "https",
+          "host": [
+            "rickandmortyapi",
+            "com"
+          ],
+          "path": [
+            "graphql"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

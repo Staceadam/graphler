@@ -1,15 +1,7 @@
-query character($id: ID!) {
-  character(id: $id) {
-    id
-    name
-    status
-    species
-    type
-    gender
-    origin
-    location
-    image
-    episode
-    created
+query locations($page: Int, $filter: FilterLocation) {
+  locations(page: $page, filter: $filter) {
+    __typename
+    # info
+    # results
   }
 }

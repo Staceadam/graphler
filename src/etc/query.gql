@@ -1,15 +1,11 @@
-query character($id: ID!) {
-  character(id: $id) {
-    id
-    name
-    status
-    species
-    type
-    gender
-    origin
-    location
-    image
-    episode
-    created
+query episode($id: ID!) {
+  episode(id: $id) {
+    __typename
+    id # The id of the character.
+    name # The name of the character.
+    air_date # The air date of the episode.
+    # episode # Episodes in which this character appeared.
+    # characters # List of characters who have been seen in the episode.
+    created # Time at which the character was created in the database.
   }
 }
