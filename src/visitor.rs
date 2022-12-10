@@ -133,7 +133,7 @@ fn test_field_iter() {
     use graphql_parser::parse_query;
 
     let doc = parse_query::<&str>(r#"
-        query TestQuery {
+        query TestQuery(input) {
             users {
                 id
                 country {
@@ -144,7 +144,7 @@ fn test_field_iter() {
     "#).expect("Failed to parse query");
     let mut fields = 0;
     let mut field_names = Vec::new();
-    for f in doc.visit::<Field<_>>() {
+    for f in doc.visit() {
         fields += 1;
         field_names.push(f.name);
     }

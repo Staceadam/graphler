@@ -24,7 +24,10 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                 if ext == "graphql" || ext == "gql" {
                     let data = fs::read_to_string(file.path()).expect("Unable to read file");
                     let ast = parse_query(data.as_str()).expect("failed to parse the file");
-                    for f in ast.visit::<Field<_>>() {
+                    let visitor = ast.visit();
+                    visitor.visit_field(x| collection.item.push(Query::new(x)))
+                    for f in ast.visit() {
+                        println!("{:#?}", f);
                         if f.selection_set.items.len() > 0 && f.position.line == 2 {
                             let query = Query::new(f, &ast);
                             collection.item.push(query)

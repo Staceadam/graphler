@@ -35,7 +35,6 @@ pub struct Query {
 
 impl Query {
     pub fn new<'a, 'b>(f: &'a query::Field<&'a str>, ast: &'b query::Document<&'b str>) -> Query {
-        println!("{:#?}", f.arguments);
         Query {
             name: f.name.to_string(),
             request: Request {
