@@ -1,5 +1,5 @@
-query GetCharacter($id: ID!, $name: String) {
-    character(id: $id, name: $name) {
+mutation Character($input: CharacterInput!) {
+    character(input: $input) {
         ...BaseParts
         id
         status

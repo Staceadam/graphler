@@ -1,15 +1,15 @@
-query character($id: ID!) {
-  character(id: $id) {
-    id
-    name
-    status
-    species
-    type
-    gender
-    origin
-    location
-    image
-    episode
-    created
-  }
+query GetCharacters($filters: FilterOptions!) {
+    characters(filters: $filters) {
+        id
+        name
+        status
+        species
+        type
+        gender
+        origin
+        location
+        image
+        episode
+        created
+    }
 }

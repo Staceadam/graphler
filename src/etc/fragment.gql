@@ -1,0 +1,7 @@
+fragment BaseParts on Character {
+    name
+    location
+    species
+    gender
+    type
+}

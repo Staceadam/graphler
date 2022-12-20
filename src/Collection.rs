@@ -1,3 +1,4 @@
+use apollo_parser::ast::Name;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -33,17 +34,17 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new() -> Query {
+    pub fn new(name: String, query:String, variables: String) -> Self {
         Query {
-            name: "character".to_owned(),
+            name,
             request: Request {
                 method: "POST".to_owned(),
                 header: Vec::new(),
                 body: Body {
                     mode: "graphql".to_owned(),
                     graphql: Graphql {
-                        query: "test".to_owned(),
-                        variables: "{\n\t\"id\": \"0\"\n}".to_owned()
+                        query,
+                        variables
                     }
                 },
                 url: Url {

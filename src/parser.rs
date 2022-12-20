@@ -1,11 +1,21 @@
 use std::fs;
 use std::io::Error;
 use std::path::Path;
-use apollo_parser::{ast, Parser};
+use apollo_parser::{ast::{self, OperationDefinition}, Parser};
 use walkdir::WalkDir;
 
 //this is dumb
 use crate::collection::{Collection, Query};
+
+fn operation_type_text(op_def: &OperationDefinition) -> String {
+    if op_def.operation_type().unwrap().query_token().is_some() {
+        return "query".to_string()
+    } else if op_def.operation_type().unwrap().mutation_token().is_some() {
+        return "mutation".to_string()
+    } else {
+        return "subscription".to_string()
+    }
+}
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
@@ -31,7 +41,9 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                             },
                             ast::Definition::OperationDefinition(op_def) => {
                                 // needs to check operation type for query/mutation/subscription
-                                println!("{:?} {}", op_def.operation_type().unwrap().query_token().unwrap().text(), op_def.name().unwrap().text());
+                                let op_type = operation_type_text(&op_def);
+                                let name = op_def.name().unwrap().text().as_str().to_string();
+                                let query = format!("{} {}", op_type, name);
 
                                 // variables
                                 let variable_defs = op_def.variable_definitions();
@@ -42,7 +54,10 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                                     .filter_map(|v| Some(v.variable()?.text().to_string()))
                                     .collect();
 
-                                println!("{:?}", variables);
+                                println!("variables: {:?}, string: {}", variables, variables.join(" "));
+                                let query = Query::new(name, query, variables.join(" "));
+                                
+                                collection.item.push(query)
                             },
                             _ => println!("not found") 
                         }
