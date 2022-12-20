@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use graphql_parser::{query};
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Url {
@@ -26,40 +25,6 @@ struct Request {
     url: Url,
 }
 
-
-//pub fn build_collection_query<'b>(ast: &'b query::Document<&'b str>) -> Query {
-    //Query::new()
-
-    //let query: Query = from_value(json!({
-        //"name": "character",
-        //"request": {
-            //"method": "POST",
-            //"header": [],
-            //"body": {
-                //"mode": "graphql",
-                //"graphql": {
-                    //"query": format!("{}", &ast),
-                    //"variables": "{\n\t\"id\": \"0\"\n}"
-                //}
-            //},
-            //"url": {
-                //"raw": "https://rickandmortyapi.com/graphql",
-                //"protocol": "https",
-                //"host": [
-                    //"rickandmortyapi",
-                    //"com"
-                //],
-                //"path": [
-                    //"graphql"
-                //]
-            //}
-        //},
-        //"response": []
-    //}))
-    //.expect("Couldn't read the ast that was passed");
-    //query
-//}
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Query {
     name: String,
@@ -68,7 +33,7 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new<'a>(ast: &'a query::Document<&'a str>) -> Query {
+    pub fn new() -> Query {
         Query {
             name: "character".to_owned(),
             request: Request {
@@ -77,7 +42,7 @@ impl Query {
                 body: Body {
                     mode: "graphql".to_owned(),
                     graphql: Graphql {
-                        query: format!("{}", ast),
+                        query: "test".to_owned(),
                         variables: "{\n\t\"id\": \"0\"\n}".to_owned()
                     }
                 },

@@ -4,7 +4,7 @@ name = "graphler"
 version = "0.1.0"
 [dependencies]
 bytestring = "*"
-graphql-parser = "*"
+apollo-parser = "0.4.0"
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
 serde_yaml = "*"

@@ -1,8 +1,9 @@
-use graphql_parser::{parse_query};
 use std::fs;
 use std::io::Error;
 use std::path::Path;
+use apollo_parser::{ast, Parser};
 use walkdir::WalkDir;
+
 //this is dumb
 use crate::collection::{Collection, Query};
 
@@ -18,13 +19,44 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                     .expect("failed to get file with that extension");
                 if ext == "graphql" || ext == "gql" {
                     let data = fs::read_to_string(file.path()).expect("Unable to read file");
-                    let ast = parse_query(data.as_str()).expect("failed to parse the file");
-                    let query = Query::new(&ast);
-                    collection.item.push(query)
+                    let parser = Parser::new(&data);
+                    let ast = parser.parse();
+
+                    let doc = ast.document();
+
+                    for def in doc.definitions() {
+                        match def {
+                            ast::Definition::FragmentDefinition(frag_def) => {
+                                println!("{:?}", frag_def);
+                            },
+                            ast::Definition::OperationDefinition(op_def) => {
+                                // needs to check operation type for query/mutation/subscription
+                                println!("{:?} {}", op_def.operation_type().unwrap().query_token().unwrap().text(), op_def.name().unwrap().text());
+
+                                // variables
+                                let variable_defs = op_def.variable_definitions();
+                                let variables: Vec<String> = variable_defs
+                                    .iter()
+                                    .map(|v| v.variable_definitions())
+                                    .flatten()
+                                    .filter_map(|v| Some(v.variable()?.text().to_string()))
+                                    .collect();
+
+                                println!("{:?}", variables);
+                            },
+                            _ => println!("not found") 
+                        }
+                    }
                 }
             }
             None => println!("Couldn't find any .graphql or .gql files in this project"),
         }
     }
     Ok(collection)
+}
+
+
+#[test]
+fn test_info() {
+    let parsed = parse("etc").expect("parsing failed");
 }
