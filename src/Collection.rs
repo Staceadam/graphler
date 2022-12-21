@@ -34,7 +34,7 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new(name: String, query:String, variables: String) -> Self {
+    pub fn new(name: String, query: &str, variables: String) -> Self {
         Query {
             name,
             request: Request {
@@ -43,7 +43,7 @@ impl Query {
                 body: Body {
                     mode: "graphql".to_owned(),
                     graphql: Graphql {
-                        query,
+                        query: query.to_string(),
                         variables
                     }
                 },

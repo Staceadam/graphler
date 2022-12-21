@@ -1,21 +1,12 @@
 use std::fs;
 use std::io::Error;
 use std::path::Path;
-use apollo_parser::{ast::{self, OperationDefinition}, Parser};
+use apollo_parser::{ast::{self, OperationDefinition, NamedType}, Parser, TokenKind};
 use walkdir::WalkDir;
-
-//this is dumb
 use crate::collection::{Collection, Query};
+use serde_json::{json, Value};
+use std::collections::HashMap;
 
-fn operation_type_text(op_def: &OperationDefinition) -> String {
-    if op_def.operation_type().unwrap().query_token().is_some() {
-        return "query".to_string()
-    } else if op_def.operation_type().unwrap().mutation_token().is_some() {
-        return "mutation".to_string()
-    } else {
-        return "subscription".to_string()
-    }
-}
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
@@ -41,22 +32,74 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                             },
                             ast::Definition::OperationDefinition(op_def) => {
                                 // needs to check operation type for query/mutation/subscription
-                                let op_type = operation_type_text(&op_def);
                                 let name = op_def.name().unwrap().text().as_str().to_string();
-                                let query = format!("{} {}", op_type, name);
+                                
+						// "variables": "{\n\t\"page\": null,\n\t\"filter\": null\n}"
+                        //vs
+                        // graphql: Graphql {
+                        //     variables: "id name",
+                        // },
 
                                 // variables
                                 let variable_defs = op_def.variable_definitions();
-                                let variables: Vec<String> = variable_defs
+                                let flat = variable_defs
                                     .iter()
                                     .map(|v| v.variable_definitions())
-                                    .flatten()
-                                    .filter_map(|v| Some(v.variable()?.text().to_string()))
-                                    .collect();
-
-                                println!("variables: {:?}, string: {}", variables, variables.join(" "));
-                                let query = Query::new(name, query, variables.join(" "));
+                                    .flatten();
                                 
+                                //TODO: these need to check an existing collection before setting them to dummy values
+                                let mut variables = HashMap::new(); 
+
+                                for var_def in flat {
+                                    let name = var_def.variable().unwrap().text().to_string();
+                                    match var_def.ty().unwrap() {
+                                       ast::Type::ListType(test) => {
+                                            variables.insert("list".to_string(), "idk");
+                                       },
+                                       ast::Type::NamedType(named) => {
+                                            let str_type = named.name().unwrap().ident_token().unwrap().text().to_string();
+                                            // type is nullable, set it to null
+                                            // TODO: need to set it as null not "null"
+                                            if str_type == "ID" {
+                                                variables.insert(name, "null");
+                                            } else if str_type == "String" {
+                                                variables.insert(name, "null");
+                                            } else if str_type == "Boolean" {
+                                                variables.insert(name, "null");
+                                            } else if str_type == "Float" {
+                                                variables.insert(name, "null");
+                                            } else if str_type == "Int" {
+                                                variables.insert(name, "null");
+                                            } else {
+                                                //TODO: check other types and create object or list
+                                                variables.insert(name, "null");
+                                            }
+                                            // buf.push_str(&var_def.variable().unwrap().text().to_string());
+                                            // buf.push_str(&named.name().unwrap().ident_token().unwrap().to_string());
+                                        // println!("{:#?}", named.name().unwrap().ident_token().unwrap().to_string())
+                                       },
+                                       ast::Type::NonNullType(non_null) => {
+                                        let str_type = non_null.named_type().unwrap().name().unwrap().ident_token().unwrap().text().to_string();
+
+                                        if str_type == "ID" {
+                                            variables.insert(name, "0");
+                                        } else if str_type == "String" {
+                                            variables.insert(name, "test");
+                                        } else if str_type == "Boolean" {
+                                            variables.insert(name, "false");
+                                        } else if str_type == "Float" {
+                                            variables.insert(name, "1.2");
+                                        } else if str_type == "Int" {
+                                            variables.insert(name, "1");
+                                        } else {
+                                            //TODO: check other types and create object or list
+                                            variables.insert(name, "unique");
+                                        }
+                                       }
+                                    }
+                                }
+                                let query = Query::new(name, &data, json!(variables).to_string());
+
                                 collection.item.push(query)
                             },
                             _ => println!("not found") 
