@@ -1,4 +1,4 @@
-use apollo_parser::ast::Name;
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -11,7 +11,7 @@ struct Url {
 #[derive(Serialize, Deserialize, Debug)]
 struct Graphql {
     query: String,
-    variables: String,
+    variables: HashMap<String, Option<String>>,
 }
 #[derive(Serialize, Deserialize, Debug)]
 struct Body {
@@ -34,7 +34,7 @@ pub struct Query {
 }
 
 impl Query {
-    pub fn new(name: String, query: &str, variables: String) -> Self {
+    pub fn new(name: String, query: &str, variables: HashMap<String, Option<String>>) -> Self {
         Query {
             name,
             request: Request {

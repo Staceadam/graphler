@@ -4,7 +4,6 @@ use std::path::Path;
 use apollo_parser::{ast::{self, OperationDefinition, NamedType}, Parser, TokenKind};
 use walkdir::WalkDir;
 use crate::collection::{Collection, Query};
-use serde_json::{json, Value};
 use std::collections::HashMap;
 
 
@@ -54,25 +53,25 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                                     let name = var_def.variable().unwrap().text().to_string();
                                     match var_def.ty().unwrap() {
                                        ast::Type::ListType(test) => {
-                                            variables.insert("list".to_string(), "idk");
+                                            variables.insert("list".to_string(), "idk".to_string());
                                        },
                                        ast::Type::NamedType(named) => {
                                             let str_type = named.name().unwrap().ident_token().unwrap().text().to_string();
                                             // type is nullable, set it to null
                                             // TODO: need to set it as null not "null"
                                             if str_type == "ID" {
-                                                variables.insert(name, "null");
+                                                variables.insert(name, "".to_string());
                                             } else if str_type == "String" {
-                                                variables.insert(name, "null");
+                                                variables.insert(name, "".to_string());
                                             } else if str_type == "Boolean" {
-                                                variables.insert(name, "null");
+                                                variables.insert(name, "".to_string());
                                             } else if str_type == "Float" {
-                                                variables.insert(name, "null");
+                                                variables.insert(name, "".to_string());
                                             } else if str_type == "Int" {
-                                                variables.insert(name, "null");
+                                                variables.insert(name, "".to_string());
                                             } else {
                                                 //TODO: check other types and create object or list
-                                                variables.insert(name, "null");
+                                                variables.insert(name, "null".to_string());
                                             }
                                             // buf.push_str(&var_def.variable().unwrap().text().to_string());
                                             // buf.push_str(&named.name().unwrap().ident_token().unwrap().to_string());
@@ -82,23 +81,23 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                                         let str_type = non_null.named_type().unwrap().name().unwrap().ident_token().unwrap().text().to_string();
 
                                         if str_type == "ID" {
-                                            variables.insert(name, "0");
+                                            variables.insert(name, "0".to_string());
                                         } else if str_type == "String" {
-                                            variables.insert(name, "test");
+                                            variables.insert(name, "test".to_string());
                                         } else if str_type == "Boolean" {
-                                            variables.insert(name, "false");
+                                            variables.insert(name, "false".to_string());
                                         } else if str_type == "Float" {
-                                            variables.insert(name, "1.2");
+                                            variables.insert(name, "1.2".to_string());
                                         } else if str_type == "Int" {
-                                            variables.insert(name, "1");
+                                            variables.insert(name, "1".to_string());
                                         } else {
                                             //TODO: check other types and create object or list
-                                            variables.insert(name, "unique");
+                                            variables.insert(name, "unique".to_string());
                                         }
                                        }
                                     }
                                 }
-                                let query = Query::new(name, &data, json!(variables).to_string());
+                                let query = Query::new(name, &data, variables);
 
                                 collection.item.push(query)
                             },
