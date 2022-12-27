@@ -1,6 +1,6 @@
 use crate::collection::{Collection, Query};
 use apollo_parser::{
-    ast::{self, NamedType, OperationDefinition},
+    ast::{self, AstChildren, NamedType, OperationDefinition, Selection, SelectionSet},
     Parser, TokenKind,
 };
 use std::collections::HashMap;
@@ -8,6 +8,24 @@ use std::fs;
 use std::io::Error;
 use std::path::Path;
 use walkdir::WalkDir;
+
+fn get_selection(set: ast::SelectionSet) {
+    for selection in set.selections() {
+        match selection {
+            Selection::FragmentSpread(frag) => {
+                println!("fragment spread: {:#?}", frag)
+            }
+            Selection::InlineFragment(frag) => {
+                println!("{:#?}", frag)
+            }
+            Selection::Field(field) => {
+                if let Some(selection_set) = field.selection_set() {
+                    get_selection(selection_set);
+                }
+            }
+        }
+    }
+}
 
 pub fn parse(path: &str) -> Result<Collection, Error> {
     let mut collection = Collection::new("insertNameFromCliInputOrUrlBase");
@@ -36,6 +54,15 @@ pub fn parse(path: &str) -> Result<Collection, Error> {
                             }
                             ast::Definition::OperationDefinition(op_def) => {
                                 let name = op_def.name().unwrap().text().as_str().to_string();
+
+                                if let Some(selection_set) = op_def.selection_set() {
+                                    get_selection(selection_set);
+                                }
+
+                                // let selection =
+                                //     selection_set.iter().map(|x| x.selections()).flatten();
+
+                                // let flat_two = selection_set.iter()
 
                                 // check if operation has any fragments in it
                                 // if so grab all fragments in operation and then check them against list of fragments to find a match
