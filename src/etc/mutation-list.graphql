@@ -1,0 +1,11 @@
+mutation CharacterList($input: [String]) {
+    character(input: $input) {
+        ...BaseParts
+        id
+        status
+        origin
+        image
+        episode
+        created
+    }
+}
